@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <ctime>
 #include <conio.h>
+#include <fstream>
+#include "FileM.h"
 
 using namespace std;
 
@@ -144,11 +146,22 @@ int main()
 	int motion = 0;
 
 	char wasd;
+	FileM saveFile;						//입출력문 시작
+
+	saveFile.ReadFile("save1.txt");		//파일을 불러옴
+	if (saveFile.saveGold > 0)			//파일이 없다면 음수로 표시되므로 해당 조건으로 파일 있는지 확인
+	{
+	player.gold += saveFile.saveGold;
+	cout << "저장된 돈은 " << saveFile.saveGold << "입니다." << endl;
+	}
 
 	srand(time(NULL));
 
 	while (reset)				//적 숫자만큼 적 생성
 	{
+
+
+
 		for (int i = 0; i < enemy; i++)
 		{
 			escapeTileX[i] = rand() % sizeX;
@@ -184,7 +197,7 @@ int main()
 	while (gameLive)				// 게임 진행
 	{
 
-		wasd = (char)_getch();
+		wasd = _getch();
 		system("cls");
 		
 		cout << "플레이어 이름 :" << player.name << endl;
@@ -243,6 +256,7 @@ int main()
 				playerX++;
 			}
 		}
+
 		break;
 		default:cout << "잘못 입력하였습니다." << endl;
 		}
@@ -324,7 +338,9 @@ int main()
 		}
 		else if (enemyCount == 0)
 		{
-			cout << "적을 모두 섬멸하여 게임을 이깁니다.";
+			cout << "적을 모두 섬멸하여 게임을 이깁니다." << endl;
+			cout << "획득한 골드를 가지고 갑니다." << endl;
+			saveFile.WriteFile("save1.txt", player.gold);
 			gameLive = 0;
 		}
 
